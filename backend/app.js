@@ -5,10 +5,7 @@ const cors = require("cors");
 const app = express();
 
 // Importer les routes
-// const authRoutes = require("./routes/unprotected/auth");
-// const photoRoutes = require("./routes/protected/photos");
-// const videoRoutes = require("./routes/protected/videos");
-// const collectionRoutes = require("./routes/protected/collections");
+// TO DOOOOOOO
 
 // Middleware pour parsing JSON
 app.use(express.json());
@@ -22,8 +19,33 @@ app.use(
 );
 
 // Routes pour l'authentification et les opérations globales
-// app.use("/api/auth", authRoutes);
-// app.use("/api/photos", photoRoutes);
-// app.use("/api/videos", videoRoutes);
-// app.use("/api/collections", collectionRoutes);
+// TO DOOOOOOO
+
+app.get("/api/images", async (req, res) => {
+  try {
+    const [files] = await db_storage.bucket().getFiles();
+
+    const imageUrls = await Promise.all(
+      files.map(async (file) => {
+        // Générer une URL signée pour chaque fichier
+        const [url] = await file.getSignedUrl({
+          action: "read",
+          expires: Date.now() + 1000 * 60 * 60, // URL valide pour 1 heure
+        });
+        return {
+          name: file.name,
+          url: url,
+        };
+      })
+    );
+
+    res.json(imageUrls);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des images:", error);
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération des images" });
+  }
+});
+
 module.exports = app;

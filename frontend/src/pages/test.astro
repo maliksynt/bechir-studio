@@ -7,38 +7,45 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Test API avec Astro</title>
+		<title>Test API Images avec Astro</title>
 	</head>
 	<body>
-		<h1>Test API avec Astro</h1>
-		<button id="addFriendButton">Ajouter un ami</button>
+		<h1>Test API Images avec Astro</h1>
+		<div id="imageContainer"></div>
 		<pre id="result"></pre>
 
 		<script>
-			document.getElementById('addFriendButton').addEventListener('click', () => {
-				const requestBody = {
-					name: "tomato",
-					status: "enemy"
-				};
-
-				fetch('http://localhost:3000/addfriend', {
-					method: 'POST',
+			function fetchImages() {
+				fetch('http://localhost:3000/api/images', {
+					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify(requestBody)
 				})
 				.then(response => response.json())
 				.then(data => {
 					console.log(data);
 					const resultElement = document.getElementById('result');
-					resultElement.textContent = `### ADD A FRIEND\nSend Request\nPOST http://localhost:8383/addfriend\nContent-Type: application/json\n\n${JSON.stringify(requestBody, null, 2)}`;
+					resultElement.textContent = JSON.stringify(data, null, 2);
+
+					const imageContainer = document.getElementById('imageContainer');
+					imageContainer.innerHTML = '';
+					data.forEach(image => {
+						const img = document.createElement('img');
+						img.src = image.url;
+						img.alt = image.name;
+						img.style.width = '800px';
+						img.style.margin = '10px';
+						imageContainer.appendChild(img);
+					});
 				})
 				.catch((error) => {
 					console.error('Erreur:', error);
 					document.getElementById('result').textContent = `Erreur : ${error.message}`;
 				});
-			});
+			};
+
+			document.addEventListener('DOMContentLoaded', fetchImages);
 		</script>
 	</body>
 </html>
