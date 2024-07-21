@@ -2,6 +2,7 @@
 /frontend/node_modules
 
 /backend/.env
+/backend/creds.json
 
 # build output
 /frontend/dist/

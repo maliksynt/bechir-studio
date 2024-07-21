@@ -7,25 +7,32 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Test CORS avec Astro</title>
+		<title>Test API avec Astro</title>
 	</head>
 	<body>
-		<h1>Test CORS avec Astro</h1>
-		<button id="testButton">Tester CORS</button>
-		<div id="result"></div>
+		<h1>Test API avec Astro</h1>
+		<button id="addFriendButton">Ajouter un ami</button>
+		<pre id="result"></pre>
 
 		<script>
-			document.getElementById('testButton').addEventListener('click', () => {
-				fetch('http://localhost:3000/', {
-					method: 'GET',
+			document.getElementById('addFriendButton').addEventListener('click', () => {
+				const requestBody = {
+					name: "tomato",
+					status: "enemy"
+				};
+
+				fetch('http://localhost:3000/addfriend', {
+					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 					},
+					body: JSON.stringify(requestBody)
 				})
-				.then(response => response.text())
+				.then(response => response.json())
 				.then(data => {
 					console.log(data);
-					document.getElementById('result').textContent = `Réponse reçue : ${data}`;
+					const resultElement = document.getElementById('result');
+					resultElement.textContent = `### ADD A FRIEND\nSend Request\nPOST http://localhost:8383/addfriend\nContent-Type: application/json\n\n${JSON.stringify(requestBody, null, 2)}`;
 				})
 				.catch((error) => {
 					console.error('Erreur:', error);

@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "firebase-admin": "^12.2.0",
+    "punycode.js": "^2.3.1"
   }
 }
